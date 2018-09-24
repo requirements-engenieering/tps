@@ -69,7 +69,13 @@ El display es controlado por la máquina dado que está ligado claramente a la v
 
 Sin ser extensivos, los requerimientos básicos que pudimos pensar son los siguientes:
 
-* La potencia a la que se somete lo ingresado en el microondas es exactamente la seleccionada en el potenciómetro.
-* El motor y la potencia estan apagados siempre que la puerta esté abierta
-* El boton iniciar solo tiene efecto cuando la puerta está cerrada
-* Los botones del panel frontal para aumentar el tiempo se deben reflejar en el display
+* Que al presionar iniciar, luego de establecer el tiempo y estando la puerta cerrada, comience a calentar.
+* Que no arranque si la puerta se encuentra abierta.
+* Que el plato gire al calentar.
+* Que se detenga al presionar parar.
+* Que se detenga al presionar abrir puerta.
+* Que funcione durante el tiempo seleccionado y luego se detenga.
+* Que caliente a la potencia seleccionada.
+* Que se encienda la lámpara al inicia y se apague al finalizar.
+* Poder definir el tiempo de calentamiento entre 1 segundo y 99:59 minutos.
+* Que el display muestre el tiempo restante de coccionn.
