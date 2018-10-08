@@ -32,7 +32,7 @@ El problema puede separarse en varias partes, de las cuales nosotros vamos a ele
 * El usuario ingresa la tarjeta.
 * El usuario presiona el boton "Consultar saldo"
 
-##### Fenomenos compartidos controlados por el Ambiente
+##### Fenomenos compartidos controlados por la Maquina
 
 * El display marca $938,90.
 
@@ -67,35 +67,61 @@ El problema puede separarse en varias partes, de las cuales nosotros vamos a ele
 * El usuario ingresa la tarjeta.
 * El usuario ingresa "retirar $1000".
 
-##### Fenomenos compartidos controlados por el Ambiente
+##### Fenomenos compartidos controlados por la Maquina
 
 * Se abre la ranura de la máquina.
 * Sale el dinero de la ranura.
 
 
 # Ejercicio 2
+
 ## Microondas
-
-En este ejercicio vamos a hacer también la separación en el análisis, pero no la vamos a desarrollar, ya que no es parte del ejercicio.
-
 
 #### 1)
 
-| Ambiente | Máquina  | Compartido |
-|----------|----------|------------|
-| Intensidad de coccion asociado a potencia indicada al magnetron | Potencia :: Alto \| Medio \| Bajo | Potencia magnetron <--> Variable Potencia |
-| El usuario toca iniciar | PuertaAbierta :: Boolean | El magnetron genera ondas => ¬PuertaAbierta ^ El usuario toco iniciar   |
-| Giro del plato vinculado a la func del motor | Motor :: Off \| 1 \| 2 \| 3  | Giro del plato <-> Motor >= 1 |
-| Estado de la lampara interna en funcion del sensor de la puerta | Lampara :: Boolean | PuertaAbierta => Lampara |
-| La puerta está abierta/cerrada | PuertaAbierta :: Boolean | Puerta abierta/cerrada <--> PuertaAbierta = True \| False |
-| El display vinculado al tiempo que lleva encendido el motor | CookTime :: NonNegInteger | Display muestra x <-> CookTime = x |
+##### Ambiente
+
+* El magnetron se encuentra encendido.
+* El plato giratorio se encuentra girando.
+* La lampara interna se encuentra encendida.
+
+##### Maquina
+
+* El contador de tiempo restante se encuentra en 30 unidades.
+* La variable "magnetron_encendido" se encuentra en True o False
+* La variable "luz_encendida" se encuentra en True o False
+* La variable "plato_girando" se encuentra en True o False
+* La variable "magnetron_intensidad" se encuentra en Alto, Bajo o Medio.
+* La variable "puerta_abierta" se encuentra en True o False.
+
+##### Compartidos
+
+* El usuario presiona el boton 10m.
+* El usuario gira la parellia y la coloca en Medio.
+* El usuario presiona el boton "Iniciar".
+* El display muestra el valor "00:30".
+* El plato comienza a girar.
+* La luz interna se enciende.
+* El magnetron se enciende.
+* El usuario presiona el boton "Abrir puerta".
+
 
 #### 2)
 
-La potencia del magnetrón es controlada por el ambiente ya que la variable está ligada al potenciómetro físico.
-El giro del plato es controlado por la máquina como una reacción al fenómeno del ambiente en el que se toca el botón de iniciar.
-El estado de la lampara es un fenómeno controlado por el ambiente, dado que está ligado enteramente con el estado de la puerta.
-El display es controlado por la máquina dado que está ligado claramente a la variable CookTime.
+##### Fenomenos compartidos controlados por el Ambiente
+
+* El usuario presiona el boton 10m.
+* El usuario gira la parellia y la coloca en Medio.
+* El usuario presiona el boton "Iniciar".
+* El usuario presiona el boton "Abrir puerta".
+
+##### Fenomenos compartidos controlados por el Ambiente
+
+* El display muestra el valor "00:30".
+* El plato comienza a girar.
+* La luz interna se enciende.
+* El magnetron se enciende.
+
 
 #### 3)
 
