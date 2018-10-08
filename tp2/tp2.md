@@ -4,7 +4,7 @@
 
 ### Alcance del problema
 
-Se deberá construir una nueva _funcionalidad_ al sistéma de venta de tickets ya existente que permita al usuario _elegir el tipo de comida que quiere a consumir en el vuelo_.
+Se deberá construir una nueva _funcionalidad_ al sistéma de venta de tickets ya existente que permita al usuario _elegir el tipo de comida que quiere consumir en el vuelo_.
 
 El alcance para cumplir con esta nueva funcionalidad será el siguiente:
 
