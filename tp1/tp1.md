@@ -11,6 +11,37 @@ El problema puede separarse en varias partes, de las cuales nosotros vamos a ele
 
 * El usuario quiere conocer su saldo.
 * El banco (o la entidad pertinente) mantiene los estados de las cuentas de cada uno de los usuarios.
+* El display se encuentra conectado.
+
+##### Máquina
+
+* Los pines saldo(Usuario) marcan 00011101010101011010.
+* El router de pantallas se encuentra en la pantalla inicial.
+* El router de pantallas se encuentra en la pantalla de consulta de saldo.
+
+##### Compartidos
+
+* El usuario ingresa la tarjeta.
+* El usuario presiona el boton "Consultar saldo"
+* El display marca $938,90.
+
+#### 2)
+
+##### Fenomenos compartidos controlados por el Ambiente
+
+* El usuario ingresa la tarjeta.
+* El usuario presiona el boton "Consultar saldo"
+
+##### Fenomenos compartidos controlados por el Ambiente
+
+* El display marca $938,90.
+
+### Retirar cantidad de dinero seleccionada
+#### 1)
+##### Ambiente
+
+* El usuario quiere retirar dinero.
+* El banco (o la entidad pertinente) mantiene los estados de las cuentas de cada uno de los usuarios.
 * Algun billete se rompe cuando sale de la ranura.
 * El usuario se vá antes de retirar el dinero.
 
@@ -18,16 +49,29 @@ El problema puede separarse en varias partes, de las cuales nosotros vamos a ele
 
 * puede_retirar_cantidad(Usuario, Cantidad) está en False o True.
 * Los pines saldo(Usuario) marcan 00011101010101011010.
-* La variable ranura_bierta está en False o True.
+* La variable ranura_abierta está en False o True.
 * Se avisa al banco que reste cierto dinero a la cuenta del usuario.
 
 
 ##### Compartidos
 
-* El display marca $938,90.
 * El usuario ingresa la tarjeta.
 * El usuario ingresa "retirar $1000".
 * Se abre la ranura de la máquina.
+* Sale el dinero de la ranura.
+
+#### 2)
+
+##### Fenomenos compartidos controlados por el Ambiente
+
+* El usuario ingresa la tarjeta.
+* El usuario ingresa "retirar $1000".
+
+##### Fenomenos compartidos controlados por el Ambiente
+
+* Se abre la ranura de la máquina.
+* Sale el dinero de la ranura.
+
 
 # Ejercicio 2
 ## Microondas
