@@ -33,19 +33,19 @@ El sistema externo de checkin desde nuestro punto de vista, cambia de estado sol
 
 ## Problema 2
 
-El problema que elegimos es el de implementar un sistema que sirva para visualizar el estado del pedido para una cadena de comidas rápidas. El sistema debe acoplarse al sistema ya existente.
+El problema que elegimos es el de implementar un sistema que sirva para que el usuario final pueda visualizar el estado del pedido para una cadena de comidas rápidas. El sistema debe acoplarse al sistema ya existente.
 
-El alcance incluye hacer la pantalla que refleje el estado de cada pedido basandose en el sistema existente.
+El alcance incluye hacer la pantalla que refleje el estado de cada pedido basandose en dicho sistema.
 Para lograr dicho alcance es necesario investigar como comunicarse con el sistema ya existente, así también como en que formato se publica la info.
 
 ### Objetos de domínio
 
-Debido a que el sistema que estamos armando solo necesita consumir datos de otro sistema (donde se cuenta con los estados de los pedidos), y mostrarlos en una pantalla, los únicos dos objetos de dominio son estos anteriormente mencionados, dado que no hay interacción con el usuario.
+Debido a que el sistema que estamos armando solo necesita consumir datos de otro sistema (donde se cuenta con los estados de los pedidos), y mostrarlos en una pantalla, los únicos dos objetos de dominio son estos anteriormente mencionados, dado que no hay interacción con el usuario final (él vé lo que se muestra en pantalla).
 
 > Sistema Existente: Dinámico - Activo - Autonomo
 
 El sistema existente se encarga de recopilar la información que vamos a usar, de una manera que no nos interesa en nuestro problema, dado que tratamos al sistema existente como una caja negra que nos provee con la información a mostrar en la pantalla.
-Debido a que lo tratamos como una caja negra, adquiere por transitividad todas las propiedades de los usuarios, dado que puede cambiar en base al input de los mismos, para nosotros el sistema externo es autonomo.
+Debido a que lo tratamos como una caja negra, adquiere por transitividad todas las propiedades de los usuarios, dado que puede cambiar en base al input de los mismos, debido a esto, para nosotros el sistema externo es autonomo.
 
 > Pantalla: Dinámico - Reactivo
 
