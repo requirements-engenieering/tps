@@ -4,12 +4,26 @@
 ------
 ### Contexto
 
-Últimamente los hoteles realizaron una serie de encuestas que reveló que los usuarios no confían en los sistemas de pagos que ofrecen los hoteles. Por otro lado, muchas vecesse ofrecen distintos _paquetes_ (1) según los servicios que quieran tener los clientes, los cuales a veces se aprovechan y obtienen de todas formas sin pagarlos.
+En el pasado semestre, particularmente durante la epoca de invierno, el equipo de marketing y logistica tuvieron el encargo de realizar encuestas a razon de adquirir, y analizar los diferentes comportamientos de los clientes. Dichas encuestas revelaron que los usuarios no confían en los sistemas de pagos que ofrecen los hoteles, y las razones son bastante variadas. Algunos de los ejemplos obtenidos son sistemas deficientes, sistemas con respuesta que tardan demasiado tiempo, etc. Por otro lado, uno de los servicios habituales que nuestra gama de hoteles suele manejar es la venta inmediata y/o diferida de paquetes turisticos,
 
-(1) Por ejemplo:
-|básico|bar   |jacuzzi|heladera
-|:----:|:----:|:-----:|:---:
-|10 u$s|5 u$s |10 u$s  |10 u$s
+Tabla de Tarifas Actual
+|Servicio de hospedaje básico|Bar   |Jacuzzi|Heladera|Pileta Climatizada|Gimnasio
+|:----:|:----:|:-----:|:---:|:---:|:---:|:---:
+|300 u$s|10 u$s |35 u$s  |10 u$s|25 u$s|27 u$s
+
+Paquetes
+|Servicio de hospedaje básico|Bar   |Jacuzzi|Heladera|Pileta Climatizada|Gimnasio|Total
+|:----:|:----:|:-----:|:---:|:---:|:---:|:---:|:---:
+|X|X|O|X|O|O|275 u$s
+|X|X|O|X|O|X|300 u$s
+|X|X|O|X|X|X|325 u$s
+|X|X|X|X|X|X|350 u$s
+
+los cuales en un promedio elevado, los clientes aprovechan y obtienen de todas formas sin pagarlos (informacion vital que pudo obtenerse gracias al registro y rastreo de los mismos).
+
+
+
+Si bien, se lleva utilizando el sistema actual durante un tiempo prolongado, tambien es de publico conocimiento que los avances tecnologicos actuales pueden beneficiar a la empresa de diferetes maneras. Nuestro principal objetivo a mediano/largo plazo es generar un sistema centralizado
 
 Por este motivo, se quiere realizar un sistema que permita centralizar los metodos de pago, de forma tal que los clientes puedan confiar en que no les van a cobrar algo que no utilizaron además de que los hoteles también puedan confiar en que la gente no se salteará ningún servicio utilizado.
 
