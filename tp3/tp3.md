@@ -21,8 +21,6 @@ Paquetes
 
 los cuales en un promedio elevado, los clientes aprovechan y obtienen de todas formas sin pagarlos (informacion vital que pudo obtenerse gracias al registro y rastreo de los mismos).
 
-
-
 Si bien, se lleva utilizando el sistema actual durante un tiempo prolongado, tambien es de publico conocimiento que los avances tecnologicos actuales pueden beneficiar a la empresa de diferetes maneras. Nuestro principal objetivo a mediano/largo plazo es generar un sistema centralizado
 
 Por este motivo, se quiere realizar un sistema que permita centralizar los metodos de pago, de forma tal que los clientes puedan confiar en que no les van a cobrar algo que no utilizaron además de que los hoteles también puedan confiar en que la gente no se salteará ningún servicio utilizado.
@@ -35,3 +33,62 @@ Por otro lado, también habrá que hacer un sistema que pueda leer los datos de 
 
 Finalmente, vemos una oportunidad de negocio en tratar los datos de los usuarios (i.e qué servicios usan y cuales no), por lo que esto también será parte del alcance.
 
+
+Sera parte del alcance del sistema los siguientes puntos:
+
+* Contar con una interfaz que permita integrarlo en otros sitemas ya existentes
+* Permitirle a los usuarios utilizar tarjetas magneticas/NFC para acceder a los distintos servicios del hotel
+* Facilitar el cobro de los gastos del usuario llevando un registro de los mismos
+  * Llevar un registro de los gastos con dichas tarjetas
+  * Llevar un registro más detallado de los gastos de los usuarios en una base de datos del hotel
+* Permitirle a los administradores del hotel acceder a los datos de gastos de los usuarios
+* Permitirle a los administradores acceder a graficos de uso y analytics
+
+No es parte del alcance del sistema los siguietes puntos:
+
+* Implementar un subsistema de facturación
+* Implementar un sistema de reservas y gestion hotelera
+
+### Especificaciones
+
+#### Entrada
+
+##### Requerimiento
+
+Al ser un plugin de sistemas de gestion hotelera, se requiere que la entrada al sistema sea una API que exponemos al sistema externo, que recibe un usuario y un ID de tarjeta, para avisarnos que X usuario tiene Y tarjeta en este momento.
+
+##### Especificación
+
+El sistema externo enviará los datos necesarios a la API, ésta debe recibir los datos y validar que sean los necesarios, es decir, que contenga información de usuario y tarjeta.
+Luego de la validación debe guardar los datos en la base de datos, y enviar una respuesta de confirmación de recepción.
+En caso de algun error se debe responder con el status code HTTP que corresponda.
+
+Se adjuntara un diagrama de flujo para clarificar el proceso.
+
+Consideraciones:
+* La API debe ser RESTful
+* Se debe guardar la información enviada por el sistema externo en una base de datos (MongoDB) i.e., map: usuario -> tarjeta
+* Los datos se reciben en formato JSON
+* Los status code a utilizar se encuentra en el RFC HTTP 1.1
+
+TO DO: Case use diagram, flowchart, etc.
+
+#### Proceso
+
+##### Requerimiento
+
+Al "pasar" la tarjeta por el dispositivo asociado a un servicio se quiere que se actualice el balance de cobro en los datos de la tarjeta.
+
+##### Especificación
+
+TO DO
+
+#### Salida
+
+##### Requerimiento
+
+Se quiere poder visualizar un reporte de los gastos del usuario.
+
+##### Especificación
+
+TO DO
