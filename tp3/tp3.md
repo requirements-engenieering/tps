@@ -71,7 +71,7 @@ Consideraciones:
 * Los datos se reciben en formato JSON
 * Los status code a utilizar se encuentra en el RFC HTTP 1.1
 
-TO DO: Case use diagram, flowchart, etc.
+![first_flow.svg](first_flow.svg)
 
 #### Proceso
 
@@ -81,7 +81,14 @@ Al "pasar" la tarjeta por el dispositivo asociado a un servicio se quiere que se
 
 ##### Especificación
 
-TO DO
+Cunado un usuario tiene la tarjeta asignada debe ser capaz de usarla para habilitar los servicios de la habitación. Es necesario que todos estos movimientos se guarden para luego poder ser cobrados.
+
+![second_uml.svg](second_uml.svg)
+
+Para resolver esto habrá que recibir la comunicación del dispositivo que usaremos para leer las tarjetas.
+El sistema recibirá información sobre la tarjeta y sobre el servicio, de forma tal que deberá utilizar la información cargada en la base de datos para actualizar el balance. Lo cual podríamos ver de la siguiente forma:
+
+![second_flow.svg](second_flow.svg)
 
 #### Salida
 
