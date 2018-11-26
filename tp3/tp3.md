@@ -98,4 +98,8 @@ Se quiere poder visualizar un reporte de los gastos del usuario.
 
 ##### Especificación
 
-TO DO
+El sistema debe ser capaz de mostrar un reporte que permita inferir ciertas cosas acerca de los comportamientos de los usuarios. El reporte debe ser de la siguiente forma:
+
+![mockup.png](mockup.png)
+
+El mockup que se muestra es lo mínimo indispensable, pero cualquier otro chart que se pueda inferir en base a los datos que tengamos será bienvenido.
