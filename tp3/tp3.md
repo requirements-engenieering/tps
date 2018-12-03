@@ -1,6 +1,6 @@
 # Trabajo práctico 3
 
-## Centralizar el sistema de pago de los hoteles
+## Mejorar el sistema de pago existente
 
 #### Cliente
 
