@@ -1,10 +1,30 @@
 # Trabajo práctico 3
 
 ## Centralizar el sistema de pago de los hoteles
-------
+
+#### Cliente
+
+Hoteles Pepito, una empresa lider en el mercado hotelero con 45 años de experiencia en la region latinoamericana.
+Con más de 120 hoteles en las mejores ubicaciones de 6 países (Argentina, Brasil, Uruguay, Chile, Venezuela, Mexico), en Hoteles Pepito ofrecemos experiencias vacacionales de alta calidad, avaladas por la satisfacción de nuestros clientes.
+
+Servicios indpendientes:
+* Hospedaje
+* Gimnasio
+* Pileta
+* Jacuzzi
+* Bar
+* Salon de Juegos
+* Heladera
+* Caja Fuerte
+* Sauna
+* Spa
+* Restaurante
+ 
+Los Paquetes hoteleros pueden ser armados utilizando un subconjunto del total, no hay paquetes prearmados, dejando al cliente la satisfaccion de armar su estadía de forma autónoma. Es importante aclarar que como Hoteles Pepito es una franquicia las tarifas de base deben mantenerse en todos los países sumando los impuestos que haya que respetar en cada país según sus normas.
+
 ### Contexto
 
-En el pasado semestre, particularmente durante la epoca de invierno, el equipo de marketing y logistica tuvieron el encargo de realizar encuestas a razon de adquirir, y analizar los diferentes comportamientos de los clientes. Dichas encuestas revelaron que los usuarios no confían en los sistemas de pagos que ofrecen los hoteles, y las razones son bastante variadas. Algunos de los ejemplos obtenidos son sistemas deficientes, sistemas con respuesta que tardan demasiado tiempo, etc. Por otro lado, uno de los servicios habituales que nuestra gama de hoteles suele manejar es la venta inmediata y/o diferida de paquetes turisticos,
+En el pasado semestre, particularmente durante la epoca de invierno, el equipo de marketing y logistica tuvieron el encargo de realizar encuestas a razon de adquirir, y analizar los diferentes comportamientos de los clientes. Dichas encuestas revelaron que los usuarios no confían en los sistemas de pagos que ofrecen los hoteles, y las razones son bastante variadas. Algunos de los ejemplos obtenidos son sistemas deficientes, sistemas con respuesta que tardan demasiado tiempo, etc. Por otro lado, uno de los servicios habituales que nuestra gama de hoteles suele manejar es la venta inmediata y/o diferida de paquetes hotelero,
 
 Tabla de Tarifas Actual
 |Servicio de hospedaje básico|Bar   |Jacuzzi|Heladera|Pileta Climatizada|Gimnasio
@@ -21,9 +41,9 @@ Paquetes
 
 los cuales en un promedio elevado, los clientes aprovechan y obtienen de todas formas sin pagarlos (informacion vital que pudo obtenerse gracias al registro y rastreo de los mismos).
 
-Si bien, se lleva utilizando el sistema actual durante un tiempo prolongado, tambien es de publico conocimiento que los avances tecnologicos actuales pueden beneficiar a la empresa de diferetes maneras. Nuestro principal objetivo a mediano/largo plazo es generar un sistema centralizado
+Es de publico conocimiento que los avances tecnologicos actuales pueden beneficiar a la empresa de diferetes maneras. Nuestro principal objetivo a mediano/largo plazo es tener un mejor monitoreo de como se maneja el cobro independiemente de la ubicación geográfica de los hoteles, así como también poder inferir comportamientos comunes de nuestros clientes.
 
-Por este motivo, se quiere realizar un sistema que permita centralizar los metodos de pago, de forma tal que los clientes puedan confiar en que no les van a cobrar algo que no utilizaron además de que los hoteles también puedan confiar en que la gente no se salteará ningún servicio utilizado.
+Por este motivo la empresa Hoteles Pepito S.R.L., requiere realizar un sistema que permita centralizar los metodos de pago, de forma tal que los clientes puedan confiar en que no les van a cobrar algo que no utilizaron además de que los hoteles también puedan confiar en que la gente no se salteará ningún servicio utilizado. Esto se debe mayormente al sistema actual de cobro hacia el cliente. Este se ha manifestado disconforme, de manera incremental, ante los cuadros tarifarios alegando no haber utilizados ciertos servicios, intentando asi, lograr un escape al pago.
 
 ### Alcance
 
