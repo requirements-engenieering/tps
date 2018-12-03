@@ -51,9 +51,7 @@ No es parte del alcance del sistema los siguietes puntos:
 
 ### Especificaciones
 
-#### Entrada
-
-##### Requerimiento
+#### Requerimiento 1
 
 Al ser un plugin de sistemas de gestion hotelera, se requiere que la entrada al sistema sea una API que exponemos al sistema externo, que recibe un usuario y un ID de tarjeta, para avisarnos que X usuario tiene Y tarjeta en este momento.
 
@@ -73,9 +71,7 @@ Consideraciones:
 
 ![first_flow.svg](first_flow.svg)
 
-#### Proceso
-
-##### Requerimiento
+#### Requerimiento 2
 
 Al "pasar" la tarjeta por el dispositivo asociado a un servicio se quiere que se actualice el balance de cobro en los datos de la tarjeta.
 
@@ -90,9 +86,7 @@ El sistema recibirá información sobre la tarjeta y sobre el servicio, de forma
 
 ![second_flow.svg](second_flow.svg)
 
-#### Salida
-
-##### Requerimiento
+#### Requerimiento 3
 
 Se quiere poder visualizar un reporte de los gastos del usuario.
 
