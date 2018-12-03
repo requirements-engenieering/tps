@@ -19,7 +19,7 @@ Servicios indpendientes:
 * Sauna
 * Spa
 * Restaurante
- 
+
 Los Paquetes hoteleros pueden ser armados utilizando un subconjunto del total, no hay paquetes prearmados, dejando al cliente la satisfaccion de armar su estadía de forma autónoma. Es importante aclarar que como Hoteles Pepito es una franquicia las tarifas de base deben mantenerse en todos los países sumando los impuestos que haya que respetar en cada país según sus normas.
 
 ### Contexto
@@ -117,3 +117,31 @@ El sistema debe ser capaz de mostrar un reporte que permita inferir ciertas cosa
 ![mockup.png](mockup.png)
 
 El mockup que se muestra es lo mínimo indispensable, pero cualquier otro chart que se pueda inferir en base a los datos que tengamos será bienvenido.
+
+
+## Notas
+
+Describir los sistemas externos. todos
+los que usan nuestro sistema (facturacion, gestion hotelera)
+los que usamos para dar acceso a los servicios
+como nos comunicamos con los servicios externos
+en que formato y con que peculiaridades
+
+Problema desde el POV del analista
+
+Nuestro cliente tiene la necesidad de controlar, visualizar y analisar los datos de consumo de sus clientes, con el fin de poder cobrar lo justo y necesario que se gasto, poder luego hacer analytics y demas.
+
+El sistema que se pide es simplemente una API, que provee los datos que otro sistema visualizara. Donde se visualiza, quienes lo pueden ver y demás es parte del scope del sistema externo.
+
+* Al entrar al hotel se le da N tarjetas al usuario (1 por familiar mayor de edad), las cuales seran grabadas con un ID unico asociado al cliente, y un ID de habitación. Esta grabación se hara con un lectograbador NFC que posee el administrativo de atencion al usuario.
+* Todas las tarjetas pueden acceder a todos los servicios del hotel
+* Los servicios del hotel se pueden clasificar dependiendo de su ¿tiempo de uso?:
+  * Servicios por dia
+  * Servicios por uso de unica vez
+* Los diferentes servicios pueden accederse de alguna de las siguientes maneras:
+  * Acceso por puerta restringida -> La tarjeta se pasa por un lector que abre la puerta
+  * Acceso por actuador ON/OFF -> La tarjeta se pasa por un lector que enciende el aparato
+  * En cualquiera de esos casos, nuestro sistema le avisa al sistema externo que se debe desbloquear/encender. Nuestro sistema no sera el encargado de implementar la solucion de desbloquado/encendido.
+* El sistema debe devolver los datos de eventos de consumición de servicio asociados a una tarjeta/cliente, va a esperar un ID del cliente, y devolver los datos que se encuentran en la base de datos.
+* La tarjeta NFC solo va a guardar los datos de ID de tarjeta y habitación, sin guardar datos de cada una de las transacciones, sera solo utilizada como metodo identificatorio, y para poder guardar en la base de datos el consumo asociado al ID de la tarjeta, es decir, la tarjeta X consumio Y servicio a las Z horas.
+ 
