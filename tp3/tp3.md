@@ -1,49 +1,37 @@
 # Trabajo práctico 3
 
-## Mejorar el sistema de pago existente
+## Sistema de cobro por tarjeta NFC
+--------
+### Cliente
 
-#### Cliente
+Hoteles Pepito es una cadena de hoteles que quiere implementar un sistema de manejo de servicios en el cual sus clientes puedan elegir qué servicios utilizar y luego reciban una factura acorde de forma sencilla y rápida. 
 
-Hoteles Pepito, una empresa lider en el mercado hotelero con 45 años de experiencia en la region latinoamericana.
-Con más de 120 hoteles en las mejores ubicaciones de 6 países (Argentina, Brasil, Uruguay, Chile, Venezuela, Mexico), en Hoteles Pepito ofrecemos experiencias vacacionales de alta calidad, avaladas por la satisfacción de nuestros clientes.
+#### Requerimientos de negocio
 
-Servicios indpendientes:
-* Hospedaje
-* Gimnasio
-* Pileta
-* Jacuzzi
-* Bar
-* Salon de Juegos
-* Heladera
-* Caja Fuerte
-* Sauna
-* Spa
-* Restaurante
+##### Contexto
 
-Los Paquetes hoteleros pueden ser armados utilizando un subconjunto del total, no hay paquetes prearmados, dejando al cliente la satisfaccion de armar su estadía de forma autónoma. Es importante aclarar que como Hoteles Pepito es una franquicia las tarifas de base deben mantenerse en todos los países sumando los impuestos que haya que respetar en cada país según sus normas.
+Hoteles Pepito, tiene los siguientes servicios adicionales al hospedaje:
 
-### Contexto
+1) Gimnasio
+2) Pileta
+3) Jacuzzi
+4) Bar
+5) Salon de Juegos
+6) Heladera
+7) Caja Fuerte
+8) Sauna
+9) Spa
+10) Restaurante
 
-En el pasado semestre, particularmente durante la epoca de invierno, el equipo de marketing y logistica tuvieron el encargo de realizar encuestas a razon de adquirir, y analizar los diferentes comportamientos de los clientes. Dichas encuestas revelaron que los usuarios no confían en los sistemas de pagos que ofrecen los hoteles, y las razones son bastante variadas. Algunos de los ejemplos obtenidos son sistemas deficientes, sistemas con respuesta que tardan demasiado tiempo, etc. Por otro lado, uno de los servicios habituales que nuestra gama de hoteles suele manejar es la venta inmediata y/o diferida de paquetes hotelero,
+Cada uno de estos servicios se cobra a parte del precio del hospedaje, lo que quiere decir que si uno pide una habitación con _3_ y _7_, al final de la estadía deberá pagar la suma de los precios del hospedaje, del jacuzzi y de la caja fuerte, lo haya usado o no. Hay algunos de estos servicios que están fuera de las habitaciones, y para usarlos, los huespedes tienen que pedir unas credenciales al personal administrativo. De esta forma se lleva un registro de los servicios que usó cada huesped para realizar la facturación al final. Todo esto se hace mediante un sistema de facturación que recibe _eventos_ (i.e., "el huesped X pidió usar el gimnacio", "el huesped X pidió usar el Salón de Juegos", etc)
 
-Tabla de Tarifas Actual
-|Servicio de hospedaje básico|Bar   |Jacuzzi|Heladera|Pileta Climatizada|Gimnasio
-|:----:|:----:|:-----:|:---:|:---:|:---:|:---:
-|300 u$s|10 u$s |35 u$s  |10 u$s|25 u$s|27 u$s
+##### Oportunidad de negocio, criterios de éxito, y necesidades del mercado.
 
-Paquetes
-|Servicio de hospedaje básico|Bar   |Jacuzzi|Heladera|Pileta Climatizada|Gimnasio|Total
-|:----:|:----:|:-----:|:---:|:---:|:---:|:---:|:---:
-|X|X|O|X|O|O|275 u$s
-|X|X|O|X|O|X|300 u$s
-|X|X|O|X|X|X|325 u$s
-|X|X|X|X|X|X|350 u$s
+Segun Hoteles Pepito, los clientes están satisfechos con la idea de pagar por lo que usan en cuanto a los servicios que estan afuera de las habitaciones, no así con pagar todo lo que tenga la habitación. Por otro lado, los clientes también acusan que tener que ir hasta la sala de entrada a pedir credenciales por un servicio es un tanto molesto a pesar de las ventajas antes mencionadas.
 
-los cuales en un promedio elevado, los clientes aprovechan y obtienen de todas formas sin pagarlos (informacion vital que pudo obtenerse gracias al registro y rastreo de los mismos).
+Por este motivo, Hoteles Pepito quiere ofrecerles a sus clientes una forma mejor y más personalisada de gestionar sus gastos, sin generarles tantas molestias.
 
-Es de publico conocimiento que los avances tecnologicos actuales pueden beneficiar a la empresa de diferetes maneras. Nuestro principal objetivo a mediano/largo plazo es tener un mejor monitoreo de como se maneja el cobro independiemente de la ubicación geográfica de los hoteles, así como también poder inferir comportamientos comunes de nuestros clientes.
-
-Por este motivo la empresa Hoteles Pepito S.R.L., requiere realizar un sistema que permita centralizar los metodos de pago, de forma tal que los clientes puedan confiar en que no les van a cobrar algo que no utilizaron además de que los hoteles también puedan confiar en que la gente no se salteará ningún servicio utilizado. Esto se debe mayormente al sistema actual de cobro hacia el cliente. Este se ha manifestado disconforme, de manera incremental, ante los cuadros tarifarios alegando no haber utilizados ciertos servicios, intentando asi, lograr un escape al pago.
+En pocas palabras, las necesidades del cliente y el criterio de éxito yacen en que los clientes de Hoteles Pepito puedan tener más libertad a la hora de utilizar los servicios.
 
 ### Alcance
 
