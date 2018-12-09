@@ -157,20 +157,40 @@ Finalmente, al recibir un evento, el sistemá deberá actualizar los eventos del
 
 #### Requerimiento 3
 
-Se quiere poder visualizar un reporte de los gastos del usuario.
+El personal administartivo tiene que poder obtener la lista de eventos de un usuario para poder emitir la facturación como lo hacía antes.
 
 ##### Especificación
 
-El sistema debe ser capaz de mostrar un reporte que permita inferir ciertas cosas acerca de los comportamientos de los usuarios. El reporte debe ser de la siguiente forma:
+Para lograr esto se reemplazará el pequeño software con el que antes los administradores cargaban los eventos manualmente a medida que los usuarios los iban generando, por un software que consultará nuestro sistema mediante su API REST para luego comunicarse con el sistema de facturación y generar la factura.
 
-![mockup.png](mockup.png)
+Teniendo en cuenta que el software que usaban antes no era más que un crud de eventos que se podía gestionar mediante una UI en la cual tambíen había un botón para generar la factura y que Hoteles Pepito nos permite modificarlo, lo que se deberá hacer será eliminar la parte en la que se generan eventos manualmente y hacer que el botón generar factura ahora busque los eventos en nuestro sistema
 
-El mockup que se muestra es lo mínimo indispensable, pero cualquier otro chart que se pueda inferir en base a los datos que tengamos será bienvenido.
+El sistema viejo se vé de la siguiente forma:
 
+![g_facturacion.png](g_facturacion.png)
 
-## Notas
+Luego de la modificación deberá verse:
 
-Describir los sistemas externos. todos
+![g_facturacion_2.png](g_facturacion_2.png)
+
+Donde la diferencia fundamental yace en que **generar factura** antes buscaba en una base de datos los eventos previamente genrados, y ahora usará el resultado de
+
+```javascript
+GET /events?user=<user_id>
+```
+
+Luego deberá generar la factura como antes. Y finalmente marcará los eventos como pagados.
+
+```javascript
+PATH /events?user=<user_id>
+{
+  "paid": true,
+}
+```
+Será responsabilidad del personal administrativo desactivar todas las tarjetas del usuario cuando este se acerque a pagar.
+<!--## Notas
+
+ Describir los sistemas externos. todos
 los que usan nuestro sistema (facturacion, gestion hotelera)
 los que usamos para dar acceso a los servicios
 como nos comunicamos con los servicios externos
@@ -193,4 +213,4 @@ El sistema que se pide es simplemente una API, que provee los datos que otro sis
   * En cualquiera de esos casos, nuestro sistema le avisa al sistema externo que se debe desbloquear/encender. Nuestro sistema no sera el encargado de implementar la solucion de desbloquado/encendido.
 * El sistema debe devolver los datos de eventos de consumición de servicio asociados a una tarjeta/cliente, va a esperar un ID del cliente, y devolver los datos que se encuentran en la base de datos.
 * La tarjeta NFC solo va a guardar los datos de ID de tarjeta y habitación, sin guardar datos de cada una de las transacciones, sera solo utilizada como metodo identificatorio, y para poder guardar en la base de datos el consumo asociado al ID de la tarjeta, es decir, la tarjeta X consumio Y servicio a las Z horas.
- 
+  -->
