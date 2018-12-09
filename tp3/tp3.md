@@ -71,10 +71,11 @@ Es necesario que se pueda asociar un ID de usuario con una/varias tarjetas, para
 El sistema externo con el que Hoteles Pepito hará la grabación de las tarjetas para habilitarlas para el uso de las habitaciones provee un sistema de callbacks REST para que otros servicios consuman los cambios de las tarjetas:
 
 * **POST /subscribe**
+
 body:
-```json
+```javascript
 {
-  callback_url: string
+  "callback_url": string
 }
 ```
 
@@ -82,11 +83,11 @@ body:
 El callback a recibir en callback_url es:
 
 * **POST callback_url**
-```json
+```javascript
 {
-  card_id: string
-  user_id: string
-  room_id: string
+  "card_id": string,
+  "user_id": string,
+  "room_id": string
 }
 ```
 
@@ -99,8 +100,8 @@ En este marco, nuestro sistema deberá implementar este endpoint que usaremos pa
 ```javascript
 // user
 {
-  id: user_id
-  cards: [string]
+  id: user_id,
+  cards: [string],
   room_id: string
 }
 ```
