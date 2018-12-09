@@ -23,7 +23,7 @@ Hoteles Pepito, tiene los siguientes servicios adicionales al hospedaje:
 9) Spa
 10) Restaurante
 
-Cada uno de estos servicios se cobra a parte del precio del hospedaje, lo que quiere decir que si uno pide una habitación con _3_ y _7_, al final de la estadía deberá pagar la suma de los precios del hospedaje, del jacuzzi y de la caja fuerte, lo haya usado o no. Hay algunos de estos servicios que están fuera de las habitaciones, y para usarlos, los huespedes tienen que pedir unas credenciales al personal administrativo. De esta forma se lleva un registro de los servicios que usó cada huesped para realizar la facturación al final. Todo esto se hace mediante un sistema de facturación que recibe _eventos_ (i.e., "el huesped X pidió usar el gimnacio", "el huesped X pidió usar el Salón de Juegos", etc)
+Cada uno de estos servicios se cobra a parte del precio del hospedaje, lo que quiere decir que si uno pide una habitación con _3_ y _7_, al final de la estadía deberá pagar la suma de los precios del hospedaje, del jacuzzi y de la caja fuerte, lo haya usado o no. Hay algunos de estos servicios que están fuera de las habitaciones, y para usarlos, los huespedes tienen que pedir unas credenciales al personal administrativo. De esta forma se lleva un registro de los servicios que usó cada huesped para realizar la facturación al final de la estancia. Todo esto se hace mediante un sistema de facturación que recibe _eventos_ (i.e., "el huesped X pidió usar el gimnacio", "el huesped X pidió usar el Salón de Juegos", etc) que son ingresados manualmente (es decir, hay una intervención humana) por el personal administrativo, basandosé en los registros de gastos generados.
 
 ##### Oportunidad de negocio, criterios de éxito, y necesidades del mercado.
 
@@ -31,57 +31,91 @@ Segun Hoteles Pepito, los clientes están satisfechos con la idea de pagar por l
 
 Por este motivo, Hoteles Pepito quiere ofrecerles a sus clientes una forma mejor y más personalisada de gestionar sus gastos, sin generarles tantas molestias.
 
-En pocas palabras, las necesidades del cliente y el criterio de éxito yacen en que los clientes de Hoteles Pepito puedan tener más libertad a la hora de utilizar los servicios.
+En pocas palabras, las necesidades del mercado y el criterio de éxito yacen en que los clientes de Hoteles Pepito puedan tener más libertad a la hora de utilizar los servicios.
 
 ### Alcance
 
-El alcance, será el de integrar en cada uno de los hoteles los dispositivos que permitiran acercar una tarjeta magnética para habilitarlos (i.e para abrir el bar, etc). De esta forma se sabrá cuales fueron los servicios utilizados para la hora del cobro.
+El alcance, será el de desarrollar un sistema capaz de interactuar con unos _dispositivos_ que permiten actuar de cierta forma (e.g., abrir/cerrar una cerradura, habiiltar un molinete, etc), que serán instalados por un tercero. Estos dispositivos permitiran a los clientes de los hoteles, elegir libremente qué usar y qué no.
 
-Por otro lado, también habrá que hacer un sistema que pueda leer los datos de la tarjeta magnética para luego comunicarse con los sistemas de cobro existentes (e.g visa, mastercard, etc) para realizar finalmente el cobro.
+Este sistema deberá poder leer los datos enviados por los dispositivos al ser apoyada una tarjeta, y registrarlos de forma tal que cuando el personal administrativo lo requiera se puedan enviar los eventos al sistema de facturación existente para generar la factura.
 
-Finalmente, vemos una oportunidad de negocio en tratar los datos de los usuarios (i.e qué servicios usan y cuales no), por lo que esto también será parte del alcance.
-
+Como dato de no mernor importancia, es importante que el sistema soporte que hayan varias tarjetas con el mismo _ID_ de cliente, dado que Hoteles Pepito pidió que cada huesped mayor de edad tenga una tarjeta al ingresar.
 
 Sera parte del alcance del sistema los siguientes puntos:
 
-* Contar con una interfaz que permita integrarlo en otros sitemas ya existentes
-* Permitirle a los usuarios utilizar tarjetas magneticas/NFC para acceder a los distintos servicios del hotel
 * Facilitar el cobro de los gastos del usuario llevando un registro de los mismos
-  * Llevar un registro de los gastos con dichas tarjetas
-  * Llevar un registro más detallado de los gastos de los usuarios en una base de datos del hotel
-* Permitirle a los administradores del hotel acceder a los datos de gastos de los usuarios
-* Permitirle a los administradores acceder a graficos de uso y analytics
+  * Llevar un registro de los eventos generados con dichas tarjetas
+* Contar con una interfaz que permita integrarlo en otros sitemas ya existentes:
+  * Enviarle los eventos generados al sistema de facturación cuando sea requerido
+  * Leer los eventos que nos llegarían de los eventos para poder registrarlos 
+* Hacer una UI para permitirle al personal administrativo del hotel utilizar los eventos generados por nuestro sistema para cobrar utilizando el otro sistema.
+<!-- * Permitirle a los administradores acceder a graficos de uso y analytics -->
 
 No es parte del alcance del sistema los siguietes puntos:
 
 * Implementar un subsistema de facturación
 * Implementar un sistema de reservas y gestion hotelera
+* Instalar dispositivos de ningún tipo
+* Calcular los gastos de los usuarios en base a los eventos
 
 ### Especificaciones
 
 #### Requerimiento 1
 
-Al ser un plugin de sistemas de gestion hotelera, se requiere que la entrada al sistema sea una API que exponemos al sistema externo, que recibe un usuario y un ID de tarjeta, para avisarnos que X usuario tiene Y tarjeta en este momento.
+Es necesario que se pueda asociar un ID de usuario con una/varias tarjetas, para poder darselas a los huespedes que cumplan las condiciones. Así como tambien entender que los usuarios y las tarjetas pueden estar relacionados solo con una habitación.
+
+![er1](entity_relation.svg)
 
 ##### Especificación
 
-El sistema externo enviará los datos necesarios a la API, ésta debe recibir los datos y validar que sean los necesarios, es decir, que contenga información de usuario y tarjeta.
-Luego de la validación debe guardar los datos en la base de datos, y enviar una respuesta de confirmación de recepción.
-En caso de algun error se debe responder con el status code HTTP que corresponda.
+El sistema externo con el que Hoteles Pepito hará la grabación de las tarjetas para habilitarlas para el uso de las habitaciones provee un sistema de callbacks REST para que otros servicios consuman los cambios de las tarjetas:
 
-Se adjuntara un diagrama de flujo para clarificar el proceso.
+* **POST /subscribe**
+body:
+```json
+{
+  callback_url: string
+}
+```
 
-Consideraciones:
-* La API debe ser RESTful
-* Se debe guardar la información enviada por el sistema externo en una base de datos (MongoDB) i.e., map: usuario -> tarjeta
-* Los datos se reciben en formato JSON
+
+El callback a recibir en callback_url es:
+
+* **POST callback_url**
+```json
+{
+  card_id: string
+  user_id: string
+  room_id: string
+}
+```
+
+Donde _card_id_ es el id de la tarjeta siendo grabada, _user_id_ y _room_id_ son los ids de usuario y habitación respectivamente. En el caso de que la tarjeta esté siendo grabada al estado inicial (en el cual no abre ninguna puerta ni tiene ningún efecto con ningún actor), user_id y room_id son null.
+
+En este marco, nuestro sistema deberá implementar este endpoint que usaremos para recibir el callback:
+
+* La url estará en /register
+* Se debe actualizar/crear la información enviada por el sistema externo en una base de datos (MongoDB) con el siguiente formato
+```javascript
+// user
+{
+  id: user_id
+  cards: [string]
+  room_id: string
+}
+```
+
 * Los status code a utilizar se encuentra en el RFC HTTP 1.1
 
-![first_flow.svg](first_flow.svg)
+Notar que si el usuario aún no está registrado en nuestro sistema, habrá que crearlo. Pero en el caso de que ya esté creado simplemente se actualizará la información agregandolé una tarjeta a su lista de tarjetas y cambiando el room_id si es necesario.
+
+Por otro lado, si user_id = null habrá que eliminar la tarjeta del usuario que la tenga.
+
+![first_flow.svg](Req1.svg)
 
 #### Requerimiento 2
 
-Al "pasar" la tarjeta por el dispositivo asociado a un servicio se quiere que se actualice el balance de cobro en los datos de la tarjeta.
+Al "pasar" la tarjeta por el dispositivo asociado a un servicio se quiere que se agregue el evento a la lista de eventos generados por el usuario de la tarjeta.
 
 ##### Especificación
 
