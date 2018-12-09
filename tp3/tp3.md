@@ -91,7 +91,7 @@ El callback a recibir en callback_url es:
 }
 ```
 
-Donde _card_id_ es el id de la tarjeta siendo grabada, _user_id_ y _room_id_ son los ids de usuario y habitación respectivamente. En el caso de que la tarjeta esté siendo grabada al estado inicial (en el cual no abre ninguna puerta ni tiene ningún efecto con ningún actor), user_id y room_id son null.
+Donde _card\_id_ es el id de la tarjeta siendo grabada, _user\_id_ y _room\_id_ son los ids de usuario y habitación respectivamente. En el caso de que la tarjeta esté siendo grabada al estado inicial (en el cual no abre ninguna puerta ni tiene ningún efecto con ningún actor), user_id y room_id son null.
 
 En este marco, nuestro sistema deberá implementar este endpoint que usaremos para recibir el callback:
 
@@ -110,24 +110,50 @@ En este marco, nuestro sistema deberá implementar este endpoint que usaremos pa
 
 Notar que si el usuario aún no está registrado en nuestro sistema, habrá que crearlo. Pero en el caso de que ya esté creado simplemente se actualizará la información agregandolé una tarjeta a su lista de tarjetas y cambiando el room_id si es necesario.
 
-Por otro lado, si user_id = null habrá que eliminar la tarjeta del usuario que la tenga.
+Por otro lado, si _user\_id_ = null habrá que eliminar la tarjeta del usuario que la tenga.
 
 ![first_flow.svg](Req1.svg)
 
 #### Requerimiento 2
 
-Al "pasar" la tarjeta por el dispositivo asociado a un servicio se quiere que se agregue el evento a la lista de eventos generados por el usuario de la tarjeta.
+Al "pasar" la tarjeta por el dispositivo asociado a un servicio, se quiere que se agregue el evento de uso del servicio a la lista de eventos generados por el usuario de la tarjeta.
 
 ##### Especificación
 
-Cunado un usuario tiene la tarjeta asignada debe ser capaz de usarla para habilitar los servicios de la habitación. Es necesario que todos estos movimientos se guarden para luego poder ser cobrados.
+Los aparatos que se colocarán tienen también un sistema de callbacks REST para notificar los eventos. En este contexto el sistema tiene que poder relacionar una señal de un dispositivo en particular y una tarjeta de forma tal que según el dispositivo se sabe que evento es y cual fué el usuario que lo activó. Por ejemplo: el dispositivo con id _hfx43_ que es el que abre el molinete a la Pileta envía un callback que dice que se acercó la tarjeta _v4y_. En este caso el sistema debe saber que el dispositifo _hfx43_ está relacionado con el evento "el usuario que tiene la tarjeta _v4y_ entró a la pileta".
 
-![second_uml.svg](second_uml.svg)
+Más especificamente, la estructura del callback que mandan los dispositivos es de la siguiente forma
 
-Para resolver esto habrá que recibir la comunicación del dispositivo que usaremos para leer las tarjetas.
-El sistema recibirá información sobre la tarjeta y sobre el servicio, de forma tal que deberá utilizar la información cargada en la base de datos para actualizar el balance. Lo cual podríamos ver de la siguiente forma:
+**Evento triggereado**:
+```javascript
+{
+  "device_id": string,
+  "card_id": string,
+  "timestamp": int
+}
+```
 
-![second_flow.svg](second_flow.svg)
+Con estos eventos el sistéma deberá saber a qué evento está relacionado el _device\_id_ y generarseló al usuario que tenga la tarjeta con _card\_id_ para que luego los administradores puedan cobrar por los eventos generados de como lo hacían antes.
+
+Por otro lado, es necesario que los administradores tengan la posibilidad de decir qué eventos dispara cada dispositivo, lo cual puede cambiar con el tiempo, por lo que ellos tambien deberían poder cambiarlos en el sistema:
+
+![admin_device_event.svg](admin_device_event.svg)
+
+Para resolver esto, el sistema deberá tener una **base de datos** que permita saber dado un device_id qué evento está relacionado. No es necesario que sea una base de datos relacional ni que sea eficiente pero de todas formas el diagrama de para explicar esta relación sería:
+
+![device-event.svg](device-event.svg)
+
+Los posibles eventos que espera el servicio externo son de la siguiente forma (sus ids deberán ser consultados en el manual de eventos del software de facturación):
+
+```javascript
+{
+  "event_id": string,
+  "user_id": string,
+  "timestamp": int
+}
+```
+
+Finalmente, al recibir un evento, el sistemá deberá actualizar los eventos del usuario agregandole el evento correspondiente. Es imperativo que este proceso soporte la concurrencia ya que un mismo usuario puede generar dos eventos al mismo tiempo (e.g., dos miembros de la familia van a diferentes lados, uno a la pileta y el otro a abrir la heladera. En cuyo caso el resultado debería ser que ambos eventos se agregan a la lista de eventos del usuario).
 
 #### Requerimiento 3
 
