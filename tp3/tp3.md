@@ -33,9 +33,10 @@ Por este motivo, Hoteles Pepito quiere ofrecerles a sus clientes una forma mejor
 
 En pocas palabras, las necesidades del mercado y el criterio de éxito yacen en que los clientes de Hoteles Pepito puedan tener más libertad a la hora de utilizar los servicios.
 
+
 ### Alcance
 
-El alcance, será el de desarrollar un sistema capaz de interactuar con unos _dispositivos_ que permiten actuar de cierta forma (e.g., abrir/cerrar una cerradura, habiiltar un molinete, etc), que serán instalados por un tercero. Estos dispositivos permitiran a los clientes de los hoteles, elegir libremente qué usar y qué no.
+El alcance, será el de desarrollar un sistema capaz de interactuar con unos _dispositivos_ que permiten actuar de cierta forma (e.g., abrir/cerrar una cerradura, habiiltar un molinete, etc), que serán instalados por un tercero. Estos dispositivos permitiran a los clientes de los hoteles, elegir libremente qué usar y qué no. Es importante aclarar que los dispositivos estarán estratégicamente colocados en lugares para que la única forma de acceder a los servicios sea usando una tarjeta, pero que como esto es imposible fisicamente para algunos lugares como por ejemplo la pileta tambien es posible que muchos servicios puedan ser accedidos de otras maneras. Según hoteles Pepito, estarán contratando una empresa de seguridad para evitar esto mismo.
 
 Este sistema deberá poder leer los datos enviados por los dispositivos al ser apoyada una tarjeta, y registrarlos de forma tal que cuando el personal administrativo lo requiera se puedan enviar los eventos al sistema de facturación existente para generar la factura.
 
@@ -57,6 +58,105 @@ No es parte del alcance del sistema los siguietes puntos:
 * Implementar un sistema de reservas y gestion hotelera
 * Instalar dispositivos de ningún tipo
 * Calcular los gastos de los usuarios en base a los eventos
+
+#### Breve explicación de como deberá funcionar cada servicio
+
+* Servicios cuya entrada se cobra: Tiene varios molinetes en las entradas, los cuales deberan ser habilitados con las tarjetas para entrar. Si los usuarios entran y no les gusta se les cobra igual.
+  * Gimnasio
+  * Pileta
+* Servicios cuyos gastos dependientes del consumo
+  * Restaurante: No hay molinete, se entra libremente. Es como un tenedor libre, la gente se sirve lo que quiere, pero para abrir las diferentes vitrinas (por ejemplo la del pollo) tienen que pasar la tarjeta. Es cierto que cuando hacen esto pueden retirar más de un alimento, pero habrá personal que esté cuidando que esto no pase.
+  * Bar: similar al restaurante pero con las bebidas
+  * Salon de Juegos: similar al restaurante pero con los juegos, por ejemplo para jugar al Metal Slug hay que poner la tarjeta. Todos los juegos son de consola Atari por el momento.
+* Servicios de habitación: solo tienen una cerradura para entrar la cual se abre con la tarjeta.
+  * Jacuzzi
+  * Heladera
+  * Sauna
+  * Caja Fuerte
+  * Sauna
+  * Spa
+  * Puerta de la habitación
+
+
+### Contexto del Software a construir
+
+#### Sistemas con los que el software debe interactuar
+
+1) Sistema de facturación
+2) Actores
+  
+En cuanto al sistema de facturación, la interacción que se tendrá que cumplir es la de enviarle la lista de eventos de un usuario para generar la factura a:
+
+```javascript
+POST <url_del_sistema_de_facturacion>/facturar/:user_id
+[
+  $event_1$,
+  $event_2$,
+  .,
+  .,
+  .,
+  $event_n$
+]
+```
+
+donde cada evento es de la forma:
+
+```javascript
+{
+  "event_id": <event_id>,
+  "user_id": <user_id>,
+  "timestamp": <timestamp>
+}
+```
+
+y significa que el usuario con <user_id> hizo el <event_id> en <timestamp> que podría ser por ejemplo: _Abrir caja fuerte_. 
+
+Es importante mencionar que estos event_id ya existen en el sistema de facturación, de hecho son los que se usan actualmente para generar la factura.
+
+En el caso de la interacción con los actores, consiste en la suscripción a los eventos generados via callback. Es decir que la interacción es la misma tanto para la Caja Fuerte como para el resto de los servicios. En cuanto a la repetición de los eventos, es fundamental que se guarden absolutamente todos los eventos generados, ya que es responsabilidad del sistema de facturación saber si hay que cobrar o no por dos pasadas de tarjeta consecutivas, etc. Por ejemplo, si se abre la caja fuerte 4 veces con 2 tarjetas de diferentes individuos en un mismo día, el sistema de facturación recibirá los 4 eventos distintos pero cobrará una sola vez. La otra interacción con los actores es la de asignarles el evento que tienen que mandar en las callbacks. Por último, todos los dispositivos reportan solo 1 evento que se dispara cuando se apoya la tarjeta.
+
+#### Fenómenos del domínio
+
+Principalmente podemos nombrar tres:
+
+* Perdida de tarjeta
+
+En caso de que se pierda una tarjeta, el cliente deberá reportarlo al personal administrativo, cuya función será dar de bajas la misma en nuestro abm y darle una nueva tarjeta al cliente. Por otro lado, el cliente recibirá una "multa" que tendrá que pagar por fuera de nuestro sistema.
+
+* Personal no cliente
+
+Es importante mencionar que hay super-usuarios a los que el sistema de facturación no les genera ningún cobro aunque reciba eventos. Estos usuarios son los que se usarán para cargar las tarjetas para el personal de mantenimiento y cualquier entrada externa al flujo normal del hotel.
+
+* Salteo de servicio con tarjeta
+
+Por ejemplo, cuando un usuario salta un molinete para no pasar la tarjeta, o cuando fuerza una cerradura o algo así tambien para no pasar la misma. En estos casos, cuando son detectados, simplemente se le saca (se da de baja) la tarjeta a el y a todos los clientes de su grupo (es decir todas las tarjetas con ese user_id) para luego hecharlos del hotel cobrandoles una multa a decidir en el momento.
+
+#### Funcionamiento de los dispositivos
+
+Todos los dispositivos actores tienen el mismo funcionamiento: Leen una tarjeta, emiten el evento en el callback, esperan ack y actuan segun la respuesta:
+
+
+Todos los eventos generados son de la siguiente forma:
+```javascript
+{
+  "device_id": string,
+  "card_id": string,
+  "timestamp": int,
+  "ack_url": string
+}
+```
+
+La respuesta esperada en __ack_url__ es de la siguiente forma:
+
+```javascript
+POST <ack_url>
+{
+  "result": boolean
+}
+```
+
+donde result debe ser _true_ en caso de que se quiera dejar pasar o false en el caso contrario.
+
 
 ### Especificaciones
 
@@ -129,7 +229,8 @@ Más especificamente, la estructura del callback que mandan los dispositivos es 
 {
   "device_id": string,
   "card_id": string,
-  "timestamp": int
+  "timestamp": int,
+  "ack_url": string
 }
 ```
 
@@ -153,7 +254,17 @@ Los posibles eventos que espera el servicio externo son de la siguiente forma (s
 }
 ```
 
-Finalmente, al recibir un evento, el sistemá deberá actualizar los eventos del usuario agregandole el evento correspondiente. Es imperativo que este proceso soporte la concurrencia ya que un mismo usuario puede generar dos eventos al mismo tiempo (e.g., dos miembros de la familia van a diferentes lados, uno a la pileta y el otro a abrir la heladera. En cuyo caso el resultado debería ser que ambos eventos se agregan a la lista de eventos del usuario).
+Finalmente, al recibir un evento, el sistemá deberá actualizar los eventos del usuario agregandole el evento correspondiente. Es imperativo que este proceso soporte la concurrencia ya que un mismo usuario puede generar dos eventos al mismo tiempo (e.g., dos miembros de la familia van a diferentes lados, uno a la pileta y el otro a abrir la heladera. En cuyo caso el resultado debería ser que ambos eventos se agregan a la lista de eventos del usuario). Por otro lado, es imperativo que se envíe el "ok" al dispositivo, haciendo una pegada a la url
+
+```javascript
+POST <ack_url>
+{
+  "result": boolean
+}
+```
+
+que deberá ser true en caso de que se permita el acceso. O false en caso contrario.
+
 
 #### Requerimiento 3
 
@@ -182,12 +293,12 @@ GET /events?user=<user_id>
 Luego deberá generar la factura como antes. Y finalmente marcará los eventos como pagados.
 
 ```javascript
-PATH /events?user=<user_id>
+PATCH /events?user=<user_id>
 {
   "paid": true,
 }
 ```
-Será responsabilidad del personal administrativo desactivar todas las tarjetas del usuario cuando este se acerque a pagar.
+Será responsabilidad del personal administrativo desactivar todas las tarjetas del usuario cuando este se acerque a pagar. Es importante aclarar que si el personal administrativo no desactiva todas las tarjetas del usuario antes de generar la factura, es posible que se genere algun otro evento en el medio y que no sea cobrado.
 <!--## Notas
 
  Describir los sistemas externos. todos
