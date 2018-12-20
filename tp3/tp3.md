@@ -2,9 +2,27 @@
 
 ## Sistema de cobro por tarjeta NFC
 --------
-### Cliente
+### Nuestro Cliente
 
 Hoteles Pepito es una cadena de hoteles que quiere implementar un sistema de manejo de servicios en el cual sus clientes puedan elegir qué servicios utilizar y luego reciban una factura acorde de forma sencilla y rápida. 
+
+### Glosario
+
+Estos términos se utilizarán a lo largo del documento de ahora en más refiriendosé a su respectiva definición a menos que se aclare lo contrario.
+
+
+|**Término** | **Definición** |
+|:-----------|:---------------|
+|Reserva|El proceso que permite a un cliente reservar en qué habitación quiere hospedarse y cuanto tiempo|
+|Cliente|El cliente del hotel cuyo objetivo es pasar cierto          tiempo en el mismo|
+|Cliente titular|El dueño de la reserva|
+|Usuario|Se usa como sinónimo de cliente|
+|Dispositivo|Aparato que se encargará de leer las tarjetas|
+|Personal administrativo|Empleados del hotel cuya función es atender a los clientes|
+|Servicio|Lo que ofrece el hotel que se debe acceder mediante el uso de las tarjetas|
+|Tarjeta|Tarjeta NFC, el elemento que tendran los clientes para utilizar los servicios|
+|Personal externo|Personas que deben entrar al establecimiento para realizar tareas por ejemplo de mantenimiento, etc|
+|Tarjeta en Blanco|Tarjeta que no tiene relacionado ningún Cliente|
 
 #### Requerimientos de negocio
 
@@ -23,20 +41,178 @@ Hoteles Pepito, tiene los siguientes servicios adicionales al hospedaje:
 9) Spa
 10) Restaurante
 
-Cada uno de estos servicios se cobra a parte del precio del hospedaje, lo que quiere decir que si uno pide una habitación con _3_ y _7_, al final de la estadía deberá pagar la suma de los precios del hospedaje, del jacuzzi y de la caja fuerte, lo haya usado o no. Hay algunos de estos servicios que están fuera de las habitaciones, y para usarlos, los huespedes tienen que pedir unas credenciales al personal administrativo. De esta forma se lleva un registro de los servicios que usó cada huesped para realizar la facturación al final de la estancia. Todo esto se hace mediante un sistema de facturación que recibe _eventos_ (i.e., "el huesped X pidió usar el gimnacio", "el huesped X pidió usar el Salón de Juegos", etc) que son ingresados manualmente (es decir, hay una intervención humana) por el personal administrativo, basandosé en los registros de gastos generados.
+Cada uno de estos servicios se cobra a parte del precio del hospedaje, lo que quiere decir que si uno pide una habitación con _3_ y _7_, al final de la estadía deberá pagar la suma de los precios del hospedaje, del jacuzzi y de la caja fuerte, lo haya usado o no. Hay algunos de estos servicios que están fuera de las habitaciones, y para usarlos, los huespedes tienen que pedir unas credenciales al personal administrativo. De esta forma se lleva un registro de los servicios que usó cada huesped para realizar la facturación al final de la estancia. Todo esto se hace mediante un sistema de facturación que recibe _eventos_ (i.e., "el huesped X pidió usar el gimnasio", "el huesped X pidió usar el Salón de Juegos", etc) que son ingresados manualmente (es decir, hay una intervención humana) por el personal administrativo mediante una aplicación que envia estos eventos en un formato en particular (explicado más adelante) al sistema de facturación para que efectue la factura.
 
 ##### Oportunidad de negocio, criterios de éxito, y necesidades del mercado.
 
-Segun Hoteles Pepito, los clientes están satisfechos con la idea de pagar por lo que usan en cuanto a los servicios que estan afuera de las habitaciones, no así con pagar todo lo que tenga la habitación. Por otro lado, los clientes también acusan que tener que ir hasta la sala de entrada a pedir credenciales por un servicio es un tanto molesto a pesar de las ventajas antes mencionadas.
+Según Hoteles Pepito, los clientes están satisfechos con la idea de pagar por lo que usan en cuanto a los servicios que estan afuera de las habitaciones, no así con pagar todo lo que tenga la habitación. Por otro lado, los clientes también acusan que tener que ir hasta la sala de entrada a pedir credenciales por un servicio es un tanto molesto a pesar de las ventajas antes mencionadas.
 
-Por este motivo, Hoteles Pepito quiere ofrecerles a sus clientes una forma mejor y más personalisada de gestionar sus gastos, sin generarles tantas molestias.
+Por este motivo, Hoteles Pepito quiere ofrecerles a sus clientes una forma mejor y más personalizada de gestionar sus gastos, sin generarles tantas molestias.
 
 En pocas palabras, las necesidades del mercado y el criterio de éxito yacen en que los clientes de Hoteles Pepito puedan tener más libertad a la hora de utilizar los servicios.
 
+Para llevar a cabo este proyecto, Hoteles Pepito nos ha contratado así como a otras empresas para implementar una idea de cobro utilizando tarjetas NFC. Se sabe que habrá un tercero que se encargará de colocar unos dispositivos de su fabricación en los hoteles, cuya finalidad es proveer la funcionalidad de poder apoyar las tarjetas en pos de obtener cierto servicio. Los tipos de dispositivos que habrán serán:
+
+* Molinete
+  * Se apoya la tarjeta para entrar (ver sección de dispositivos para ver cuando se abre y cuando no)
+  * Para salir está siempre destrabado
+* Cerradura
+  * Un dispositivo que abre una cerradura cuando se apoya la tarjeta magnética (ver sección de dispositivos para ver cuando se abre y cuando no)
+  * Cuando la puerta o cerradura se vuelve a cerrar hay que apoyar denuevo la tarjeta para abrirla
+* Dispositivo general
+  * No se tiene mucha información al respecto de estos dispositivos, pero si sobre su funcionamiento: son todos parecidos a la cerradura, al acercarse la tarjeta hacen una accion basandosé en la respuesta obtenida (ver sección de dispositivos para ver cuando se abre y cuando no).
+* Grabador
+  * Servirá para grabar datos en la tarjeta: grabar qué usuario la tiene, grabar si fue devuelta (borrarle lo antes grabado), etc.
+
+
+Nuestro software debería interactuar con estos dispositivos para generar el reporte esperado por el sistema de facturación de forma tal que al final de la estadía de cada cliente se le cobre lo correspondiente.
+
+Las interacciones del sistema al final del desarrollo serían las siguientes:
+
+![basic_usage.svg](basic_usage.svg)
+
+La única interaccion de los clientes con el sistema general es a travez de los dispositivos, con sus respectivas tarjetas. En cuanto a nuestra incunvencia, los actores son los dispositivos, y el personal administrativo, siendo su función la de escribir las tarjetas (a travez del dispositivo grabador de tarjetas). El dispositivo grabador de tarjetas, es un actor que le dará a nuestro sistema los datos necesarios para saber qué cliente es el que tiene esa tarjeta.
+
+
+#### Casos de uso
+
+En esta sección revisaremos los casos de uso de los actores humanos en el sistema en general como para tener un mayor entendimiento de qué debe hacer el sistema.
+
+##### Personal Administrativo
+
+![personal_usage.svg](personal_usage.svg)
+
+---
+* Relacionar un usuario con una tarjeta:
+
+**Brebe descripción**: Uno o varios clientes o alguien del personal externo se presentan en la entrada para hacer check in. El personal administrativo chequea en uno de los sistemas existentes la reserva y en caso de que está todo bien, procede a darle/s la/s tarjeta/s o que el personal externo esté anunciado.
+
+**Paso a paso**
+Previo a esto, el personal administrativo deberá buscar en el otro sistema los datos de todos los clientes a ingresar (i.e., user_id)
+
+1) El personal administrativo agarra una tarjeta en blanco de la caja de tarjetas en blanco (se supone que habrán las suficientes siempre para los clientes y personal externo), por cada uno de los clientes.
+   1) En el caso de personal externo se pondrá _user_id_ = INF, _room_id_ = 0, dandolé así la facultad de abrir cualquier dispositivo de molinete. En caso de que el personal externo deba entrar a una abitación, se le puede asignar esa habitación. El usuario INF no computará ningun gasto (esto ya está implementado en el sistema de facturación existente).
+2) La apoya en el dispositivo grabador de tarjeta, escribe en el display del mismo el _user_id_ y el _room_id_ correspondientes, espera la confirmación de grabación.
+3) Corrobora en la pantalla de clientes de nuestro sistema que el cliente con el _user_id_ tenga grabada la tarjeta y la habitación correspondiente.
+4) Entrega la tarjeta al cliente.
+---
+* Volver una tarjeta al estado original:
+
+**Brebe descripción**: Uno o varios clientes se presentan en la entrada para hacer check out. El personal administrativo chequea que todas las tarjetas entregadas al cliente sean devueltas para finalmente volver a dejarlas en blanco.
+
+**Paso a paso**
+
+1) El personal administrativo chequea en la pantalla de clientes de nuestro sistema que todas las tarjetas asociadas al id de usuario fueron devueltas.
+2) Si fueron devueltas:
+   1) Procede a poner cada tarjeta en el dispositivo grabador
+   2) Selecciona en sus opciones borrar datos
+   3) Corrobora en el sistema que efectivamente se borraron las tarjetas de los usuarios
+3) Sino:
+   1) Se les exigirá a los usuarios que entreguen todas las tarjetas dadas
+   2) En caso de que reporten tarjetas perdidas, el personal administrativo las invalidará desde nuestro sistema (utilizando la pantalla de clientes), de forma tal que nadie más la pueda usar aunque la tarjeta tenga grabados los datos de antes.
+   3) El cliente tendrá que pagar todos los gastos que se hicieron entre las tarjetas incluyendo los de la tarjeta perdida. Esto solo es un problema si los clientes se demoran en reportar la pérdida.
+---
+* Cobrar a un Cliente:
+Todas las tarjetas deberían haber sido devueltas o declaradas perdidas para llegar a este paso.
+
+
+**Brebe descripción**: El personal administrativo pasa a realizar el cobro.
+
+**Paso a paso**
+
+1) El personal administrativo elige el _user_id_ a generarle la factura. El programa interactúa con nuestro sistema para obtener todos los eventos generados en lugar de que el personal administrativo tenga que cargarlos a mano.
+2) El personal administrativo presiona _Generar Factura_
+3) Se envían los eventos en el mismo formato que antes
+4) Se genera la factura
+5) Se procede a cobrar como se hacía antes
+
+##### Cliente
+En esta sección se explicarán algunos de los casos de uso del cliente ya que en general son todos muy parecidos salvo por los diferentes tipos que se explican luego (i.e., Cerrojo, General, Molinete)
+
+![user_usage.svg](user_usage.svg)
+
+---
+* Entrar a la habitación:
+Para llegar acá el/los cliente/s debería/n haber pasado antes por el check-in antes explicado.
+
+
+**Brebe descripción**: El/Los clientes están en la entrada de su habitación y quieren entrar.
+
+**Paso a paso**
+
+1) El cliente apoya la tarjeta en el lector que está en el cerrojo.
+2) Si la habitación es la correcta:
+   1) La puerta se abre
+   2) Ingresa, cierra la puerta (por dentro tiene picaporte asi que se puede abrir sin necesidad de tener la tarjeta)
+3) Sino
+   1) La puerta no se abre
+---
+* Entrar al jacuzzi:
+Para llegar acá el/los cliente/s debería/n haber pasado antes por el check-in antes explicado y haber entrado a la habitación (en Hoteles Pepito, los jacuzzis están dentro de la habitación).
+
+
+**Brebe descripción**: El/Los clientes están en la entrada del jacuzzi y quieren entrar.
+
+**Paso a paso**
+
+1) El cliente apoya la tarjeta en el lector que está en el cerrojo del jacuzzi.
+2) Si la habitación es la correcta:
+   1) La puerta se abre
+   2) Ingresa, cierra la puerta (por dentro tiene picaporte asi que se puede abrir sin necesidad de tener la tarjeta)
+3) Sino
+   1) La puerta no se abre
+---
+* Comer en restaurante:
+Para llegar acá el/los cliente/s debería/n haber pasado antes por el check-in antes explicado.
+
+
+**Brebe descripción**: El/Los clientes van a comer a un restaurante. En hoteles pepito los Restaurantes son tenedores libres en donde cada uno se sirve lo que quiere, teniendo que apoyar la tarjeta en los lectores de cada seccion (e.g., pollo, salsas, etc)
+
+**Paso a paso**
+Por cada plato de comida que quiera el cliente deberá:
+
+1) Apoyar la tarjeta para abrir la vitrina del plato
+2) Si la tarjeta no es blanca
+   1) La vitrina se abre para que el cliente pueda sacar el plato
+3) Sino
+   1) La vitrina no se abre
+---
+* Entrar a la pileta por molinete:
+Para llegar acá el/los cliente/s debería/n haber pasado antes por el check-in antes explicado.
+
+
+**Brebe descripción**: El cliente va a la pileta, por lo que tiene que pasar por un molinete.
+
+**Paso a paso**
+
+1) Apoyar la tarjeta en el lector del molinete
+2) Si la tarjeta no es blanca
+   1) El molinete se habilita para que el cliente pueda pasar (cuando sale, se sale por el mismo lugar, el molinete siempre está habilitado para salir, no es necesario apoyar deunevo la tarjeta)
+3) Sino
+   1) El molinete no se habilita
+
+---
+* Abrir Caja Fuerte:
+Para llegar acá el/los cliente/s debería/n haber pasado antes por el check-in antes explicado y haber entrado a su habitación. En Hoteles Pepito, las cajas fuertes están dentro de las habitaciones.
+
+
+**Brebe descripción**: El cliente quiere abrir la caja fuerte de su habitación.
+
+**Paso a paso**
+
+1) Apoyar la tarjeta en el lector del cerrojo de la Caja Fuerte.
+2) Si la tarjeta no es blanca y la habitación es la correspondiente tanto como el usuario.
+   1) Se abre la caja fuerte
+3) Sino
+   1) No se abre
+---
+**Aclaraciones**:
+Todas las tarjetas de los clientes asociados al mismo _user_id_ pueden hacer lo mismo. Es decir, no hay ninguna tarjeta que dado un _user_id_ pueda hacer más cosas que otra tarjeta con el mismo _user_id_.
+Notar que el spa y el sauna funcionan igual que la pileta (por molinete). El gimnasio, el bar, y el salon de juegos funcionan igual que el restaurante (por diferentes dispositivos, no tienen molinete). El resto son cerrojos que se abren con la tarjeta.
 
 ### Alcance
 
-El alcance, será el de desarrollar un sistema capaz de interactuar con unos _dispositivos_ que permiten actuar de cierta forma (e.g., abrir/cerrar una cerradura, habiiltar un molinete, etc), que serán instalados por un tercero. Estos dispositivos permitiran a los clientes de los hoteles, elegir libremente qué usar y qué no. Es importante aclarar que los dispositivos estarán estratégicamente colocados en lugares para que la única forma de acceder a los servicios sea usando una tarjeta, pero que como esto es imposible fisicamente para algunos lugares como por ejemplo la pileta tambien es posible que muchos servicios puedan ser accedidos de otras maneras. Según hoteles Pepito, estarán contratando una empresa de seguridad para evitar esto mismo.
+El alcance, será el de desarrollar un sistema capaz de interactuar con unos _dispositivos_ que permiten actuar de cierta forma (e.g., abrir una cerradura, habiiltar un molinete, etc), que serán instalados por un tercero. Estos dispositivos permitiran a los clientes de los hoteles, elegir libremente qué usar y qué no. Es importante aclarar que los dispositivos estarán estratégicamente colocados en lugares para que la única forma de acceder a los servicios sea usando una tarjeta, pero que como esto es imposible fisicamente para algunos lugares como por ejemplo la pileta tambien es posible que muchos servicios puedan ser accedidos de otras maneras. Según hoteles Pepito, estarán contratando una empresa de seguridad para evitar esto mismo.
 
 Este sistema deberá poder leer los datos enviados por los dispositivos al ser apoyada una tarjeta, y registrarlos de forma tal que cuando el personal administrativo lo requiera se puedan enviar los eventos al sistema de facturación existente para generar la factura.
 
@@ -62,19 +238,18 @@ No es parte del alcance del sistema los siguietes puntos:
 #### Breve explicación de como deberá funcionar cada servicio
 
 * Servicios cuya entrada se cobra: Tiene varios molinetes en las entradas, los cuales deberan ser habilitados con las tarjetas para entrar. Si los usuarios entran y no les gusta se les cobra igual.
-  * Gimnasio
   * Pileta
+  * Sauna
+  * Spa
 * Servicios cuyos gastos dependientes del consumo
   * Restaurante: No hay molinete, se entra libremente. Es como un tenedor libre, la gente se sirve lo que quiere, pero para abrir las diferentes vitrinas (por ejemplo la del pollo) tienen que pasar la tarjeta. Es cierto que cuando hacen esto pueden retirar más de un alimento, pero habrá personal que esté cuidando que esto no pase.
   * Bar: similar al restaurante pero con las bebidas
   * Salon de Juegos: similar al restaurante pero con los juegos, por ejemplo para jugar al Metal Slug hay que poner la tarjeta. Todos los juegos son de consola Atari por el momento.
+  * Gimnasio
 * Servicios de habitación: solo tienen una cerradura para entrar la cual se abre con la tarjeta.
   * Jacuzzi
   * Heladera
-  * Sauna
   * Caja Fuerte
-  * Sauna
-  * Spa
   * Puerta de la habitación
 
 
@@ -83,7 +258,7 @@ No es parte del alcance del sistema los siguietes puntos:
 #### Sistemas con los que el software debe interactuar
 
 1) Sistema de facturación
-2) Actores
+2) Dispositivos
   
 En cuanto al sistema de facturación, la interacción que se tendrá que cumplir es la de enviarle la lista de eventos de un usuario para generar la factura a:
 
@@ -113,7 +288,7 @@ y significa que el usuario con <user_id> hizo el <event_id> en <timestamp> que p
 
 Es importante mencionar que estos event_id ya existen en el sistema de facturación, de hecho son los que se usan actualmente para generar la factura.
 
-En el caso de la interacción con los actores, consiste en la suscripción a los eventos generados via callback. Es decir que la interacción es la misma tanto para la Caja Fuerte como para el resto de los servicios. En cuanto a la repetición de los eventos, es fundamental que se guarden absolutamente todos los eventos generados, ya que es responsabilidad del sistema de facturación saber si hay que cobrar o no por dos pasadas de tarjeta consecutivas, etc. Por ejemplo, si se abre la caja fuerte 4 veces con 2 tarjetas de diferentes individuos en un mismo día, el sistema de facturación recibirá los 4 eventos distintos pero cobrará una sola vez. La otra interacción con los actores es la de asignarles el evento que tienen que mandar en las callbacks. Por último, todos los dispositivos reportan solo 1 evento que se dispara cuando se apoya la tarjeta.
+En el caso de la interacción con los _dispositivos_, consiste en la suscripción a los eventos generados via callback. Es decir que la interacción es la misma tanto para la Caja Fuerte como para el resto de los servicios. En cuanto a la repetición de los eventos, es fundamental que se guarden absolutamente todos los eventos generados, ya que es responsabilidad del sistema de facturación saber si hay que cobrar o no por dos pasadas de tarjeta consecutivas, etc. Por ejemplo, si se abre la caja fuerte 4 veces con 2 tarjetas de diferentes individuos en un mismo día, el sistema de facturación recibirá los 4 eventos distintos pero cobrará una sola vez. La otra interacción con los actores es la de asignarles el evento que tienen que mandar en las callbacks. Por último, todos los dispositivos reportan solo 1 evento que se dispara cuando se apoya la tarjeta.
 
 #### Fenómenos del domínio
 
@@ -121,7 +296,7 @@ Principalmente podemos nombrar tres:
 
 * Perdida de tarjeta
 
-En caso de que se pierda una tarjeta, el cliente deberá reportarlo al personal administrativo, cuya función será dar de bajas la misma en nuestro abm y darle una nueva tarjeta al cliente. Por otro lado, el cliente recibirá una "multa" que tendrá que pagar por fuera de nuestro sistema.
+En caso de que se pierda una tarjeta, el cliente deberá reportarlo al personal administrativo, cuya función será dar de baja la misma en nuestro abm y darle una nueva tarjeta al cliente. Por otro lado, el cliente recibirá una "multa" que tendrá que pagar por fuera de nuestro sistema.
 
 * Personal no cliente
 
@@ -145,7 +320,10 @@ Todos los eventos generados son de la siguiente forma:
   "ack_url": string
 }
 ```
+#### Roles de los actores humanos en el sistema
 
+|Rol| |
+|Personal administrativo||
 La respuesta esperada en __ack_url__ es de la siguiente forma:
 
 ```javascript
@@ -156,7 +334,6 @@ POST <ack_url>
 ```
 
 donde result debe ser _true_ en caso de que se quiera dejar pasar o false en el caso contrario.
-
 
 ### Especificaciones
 
